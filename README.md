@@ -2,7 +2,7 @@
 
 ###### Created by Jet van den Berg
 This app uses an API to retrieve information about concerts in Iceland. You can choose a concert by artist, see its details, and add that concert to you 'Favorites'. 
-You need to create an account to log in, can then experience the app, and you are able see other users who are currently online. 
+You need to create an account to log in, which is logged by Firebase, can then experience the app, and you are able see other users who are currently online. 
 
 Link to API: http://apis.is/concerts
 
