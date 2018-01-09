@@ -6,7 +6,6 @@
 //  Copyright © 2017 Jet van den Berg. All rights reserved.
 //
 //  For this program is a certain API from apis.is used, parsing a JSON-object with up to date information about concerts in Iceland. http://docs.apis.is/. The API-link: http://apis.is/concerts.
-//
 
 import UIKit
 
@@ -19,6 +18,8 @@ class EventController {
     func fetchEvents(completion: @escaping ([ConcertEvent]?) -> Void) {
         let concertURL = baseURL.appendingPathComponent("concerts")
         let task = URLSession.shared.dataTask(with: concertURL) { (data, response, error) in
+            
+            // Parsing data with JSONDecoder
             let jsonDecoder = JSONDecoder()
             if let data = data,
                 let concertEvents = try? jsonDecoder.decode(ConcertEvents.self, from: data) {
