@@ -10,8 +10,6 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import UserNotifications
-import FirebaseInstanceID
-import FirebaseAnalytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
