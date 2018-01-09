@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 // Struct (codable) for the details of the events
 struct ConcertEvent: Codable {
@@ -31,4 +32,3 @@ struct ConcertEvent: Codable {
 struct ConcertEvents: Codable {
     let results: [ConcertEvent]
 }
-
