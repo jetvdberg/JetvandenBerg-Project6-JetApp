@@ -7,11 +7,16 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseDatabase
 
 class EventDetailsViewController: UIViewController {
     
     var concertEvent: ConcertEvent!
     var delegate: AddToFavoritesDelegate?
+    var user: User!
+    var refEvents: DatabaseReference?
+
     
     // Outlets
     @IBOutlet weak var imageView: UIImageView!
@@ -21,11 +26,12 @@ class EventDetailsViewController: UIViewController {
     @IBOutlet weak var eventHallLabel: UILabel!
     @IBOutlet weak var addToFavoritesButton: UIButton!
     
-    // Loads scene
+    // Loads ViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
         setupDelegate()
+        refEvents = Database.database().reference()
     }
     
     // Updates scene with properties
@@ -51,7 +57,18 @@ class EventDetailsViewController: UIViewController {
             self.addToFavoritesButton.transform = CGAffineTransform(scaleX: 3.0, y: 3.0)
             self.addToFavoritesButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         }
-        delegate?.added(concertEvent: concertEvent)
+        addEvent()
+    }
+    
+    // Adds event as child of 'user' to Firebase with properties 'id' and 'eventName'
+    func addEvent() {
+        let key = refEvents?.childByAutoId().key
+
+        let events = ["id": key,
+                      "eventName": titleLabel.text! as String
+                      ]
+        
+        refEvents?.child("user").child(key!).setValue(events)
     }
     
     override func didReceiveMemoryWarning() {
