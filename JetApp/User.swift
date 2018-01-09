@@ -11,14 +11,17 @@ import Foundation
 // Struct representing User, with email and password
 struct User {
     
+    // Properties
     let uid: String
     let email: String
     
+    // Initialize properties for Firebase
     init(authData: User) {
         uid = authData.uid
         email = authData.email
     }
     
+    // Initialize properties
     init(uid: String, email: String) {
         self.uid = uid
         self.email = email
