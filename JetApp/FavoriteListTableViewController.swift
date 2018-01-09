@@ -12,8 +12,6 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import UserNotifications
-import FirebaseInstanceID
-import FirebaseAnalytics
 import FirebaseAuth
 
 protocol AddToFavoritesDelegate {
@@ -25,16 +23,42 @@ class FavoriteListTableViewController: UITableViewController, AddToFavoritesDele
     // Properties
     let listToUsers = "ListToUsers"
     var concertEvents = [ConcertEvent]()
+    var eventsList = [EventModel]()
     var user: User!
     var userCountBarButtonItem: UIBarButtonItem!
-    var ref : DatabaseReference!
-    let usersRef = Database.database().reference(withPath: "online")
+    
+    var dataRef = Database.database().reference(withPath: "user")
+    let usersRef = Database.database().reference(withPath: "online-users")
+    
 
     // Loads scene
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.allowsMultipleSelectionDuringEditing = false
-        ref =  Database.database().reference(withPath: "results")
+        
+        // Checks for existing data in Firebase
+        dataRef.observeSingleEvent(of: .value, with: { snapshot in
+            
+            if !snapshot.exists() { return }
+            
+            self.eventsList = []
+            let eventName = snapshot.childSnapshot(forPath: "eventName").value
+            
+                for events in snapshot.children.allObjects as! [DataSnapshot] {
+                    let eventObject = events.value as? [String: AnyObject]
+                    let eventName = eventObject?["eventName"]
+                    let eventID = eventObject?["id"]
+
+                    let event = EventModel(id: eventID as! String?, eventName: eventName as! String?)
+
+                    // Adds event to list
+                    self.eventsList.append(event)
+                    self.tableView.reloadData()
+                }
+            self.updateBadgeNumber()
+
+        })
         
         // Sets buttons left and right for scene
         userCountBarButtonItem = UIBarButtonItem(title: "1", style: .plain, target: self, action: #selector(userCountButtonDidTouch))
@@ -65,11 +89,15 @@ class FavoriteListTableViewController: UITableViewController, AddToFavoritesDele
         super.didReceiveMemoryWarning()
     }
 
+    // Reloads view
+    override func viewDidAppear(_ animated: Bool) {
+        viewDidLoad()
+    }
     // MARK: - Table view data source
 
     // Returns number of rows
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return concertEvents.count
+        return eventsList.count
     }
     
     // Returns cell with given data
@@ -87,30 +115,28 @@ class FavoriteListTableViewController: UITableViewController, AddToFavoritesDele
     // Enables deleting rows
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            concertEvents.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            dataRef.child(eventsList[indexPath.row].id!).removeValue()
+            eventsList.remove(at: indexPath.row)
+            viewDidLoad()
             updateBadgeNumber()
         }
     }
-    
+        
     // Configures cells with name of events
     func configure(cell: UITableViewCell, forItemAt indexPath: IndexPath) {
-        let concertEvent = concertEvents[indexPath.row]
-        cell.textLabel?.text = concertEvent.eventDateName
+        let concertEvent = eventsList[indexPath.row]
+        cell.textLabel?.text = concertEvent.eventName
     }
 
     // Counts number of favorites in list
     func added(concertEvent: ConcertEvent) {
-        concertEvents.append(concertEvent)
-        let count = concertEvents.count
-        let indexPath = IndexPath(row: count-1, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
+        viewDidLoad()
         updateBadgeNumber()
     }
     
     // Updates number representing favorites in list
     func updateBadgeNumber() {
-        let badgeValue = concertEvents.count > 0 ? "\(concertEvents.count)" : nil
+        let badgeValue = eventsList.count > 0 ? "\(eventsList.count)" : nil
         navigationController?.tabBarItem.badgeValue = badgeValue
     }
     
