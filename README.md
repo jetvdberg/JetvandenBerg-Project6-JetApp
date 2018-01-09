@@ -6,6 +6,7 @@ You need to create an account to log in, which is logged by Firebase, can then e
 
 Link to API: http://apis.is/concerts
 
+[![BCH compliance](https://bettercodehub.com/edge/badge/jetvdberg/JetvandenBerg-Project6-JetApp?branch=master)](https://bettercodehub.com/)
 
 ![alt text](https://github.com/jetvdberg/JetvandenBerg-Project6-JetApp/blob/master/doc/IMG_2259.PNG "Log in")
 ![alt text](https://github.com/jetvdberg/JetvandenBerg-Project6-JetApp/blob/master/doc/IMG_2260.PNG "Overview")
