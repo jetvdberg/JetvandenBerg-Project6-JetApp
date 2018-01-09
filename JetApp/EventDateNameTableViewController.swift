@@ -12,9 +12,8 @@ class EventDateNameTableViewController: UITableViewController {
 
     let eventController = EventController()
     var concertEvents = [ConcertEvent]()
-    var category: String!
     
-    // Loads scene
+    // Loads ViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         EventController.shared.fetchEvents { (concertEvents) in
