@@ -32,10 +32,12 @@ class LoginViewController: UIViewController {
     }
     
     // Actions
+    // Login in button
     @IBAction func loginDidTouch(_ sender: AnyObject) {
         Auth.auth().signIn(withEmail: textFieldLoginEmail.text!, password: textFieldLoginPassword.text!)
     }
     
+    // Sign up button
     @IBAction func signUpDidTouch(_ sender: AnyObject) {
         let alert = UIAlertController(title: "Register", message: "Register", preferredStyle: .alert)
         
@@ -70,6 +72,7 @@ class LoginViewController: UIViewController {
     
 }
 
+// Presents textField
 extension LoginViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
